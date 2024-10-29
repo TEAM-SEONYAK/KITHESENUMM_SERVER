@@ -17,9 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class S3Controller {
     private final S3Service s3Service;
 
-    @GetMapping("/image")
-    public ResponseEntity<PreSignedUrlResponse> getPreSignedUrl() {
-        return ResponseEntity.ok(s3Service.getUploadPreSignedUrl());
+    @GetMapping("/image/profile")
+    public ResponseEntity<PreSignedUrlResponse> getProfilePreSignedUrl() {
+        return ResponseEntity.ok(s3Service.getImageUploadPreSignedUrl());
+    }
+
+    @GetMapping("/image/businesscard")
+    public ResponseEntity<PreSignedUrlResponse> getBusinesscardPreSignedUrl() {
+        return ResponseEntity.ok(s3Service.getUploadBusinesscardPreSignedUrl());
     }
 
     @PatchMapping("/profile-image")
