@@ -50,12 +50,40 @@ public class S3Service {
     private final static String profilePath = "profiles/";
     private final static String businessPath = "businessCard/";
 
-    public PreSignedUrlResponse getUploadPreSignedUrl() {
+    public PreSignedUrlResponse getImageUploadPreSignedUrl() {
         try {
             // UUID 파일명 생성
             String uuidFileName = UUID.randomUUID().toString() + ".jpg";
             // 경로 + 파일 이름
             String key = profilePath + uuidFileName;
+
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+
+            // S3에서 업로드는 PUT 요청
+            PutObjectPresignRequest preSignedUrlRequest = PutObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(PRE_SIGNED_URL_EXPIRE_MINUTE))
+                    .putObjectRequest(putObjectRequest)
+                    .build();
+
+            // Persigned URL 생성
+            URL url = s3Presigner.presignPutObject(preSignedUrlRequest).url();
+
+            return PreSignedUrlResponse.of(uuidFileName, url.toString());
+
+        } catch (RuntimeException e) {
+            throw new CustomException(ErrorType.GET_UPLOAD_PRESIGNED_URL_ERROR);
+        }
+    }
+
+    public PreSignedUrlResponse getUploadBusinesscardPreSignedUrl() {
+        try {
+            // UUID 파일명 생성
+            String uuidFileName = UUID.randomUUID().toString() + ".jpg";
+            // 경로 + 파일 이름
+            String key = businessPath + uuidFileName;
 
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
