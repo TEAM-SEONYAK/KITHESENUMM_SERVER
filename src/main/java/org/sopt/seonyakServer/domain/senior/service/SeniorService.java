@@ -16,6 +16,7 @@ import org.sopt.seonyakServer.domain.senior.repository.SeniorRepository;
 import org.sopt.seonyakServer.global.auth.PrincipalHandler;
 import org.sopt.seonyakServer.global.exception.enums.ErrorType;
 import org.sopt.seonyakServer.global.exception.model.CustomException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,11 +29,18 @@ public class SeniorService {
     private final AppointmentService appointmentService;
     private final PrincipalHandler principalHandler;
 
+    @Value("${aws-property.s3-bucket-name}")
+    private String bucketName;
+
+    @Value("${aws-property.s3-substring}")
+    private String s3Substring;
+
     public Senior createSenior(final MemberJoinRequest memberJoinRequest, Member member) {
 
         Senior senior = Senior.builder()
                 .member(member)
-                .businessCard(memberJoinRequest.businessCard())
+                .businessCard(
+                        "https://" + bucketName + s3Substring + "businessCard/" + memberJoinRequest.businessCard())
                 .company(memberJoinRequest.company())
                 .position(memberJoinRequest.position())
                 .detailPosition(memberJoinRequest.detailPosition())

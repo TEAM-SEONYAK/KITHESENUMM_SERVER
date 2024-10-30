@@ -54,6 +54,12 @@ public class MemberService {
     @Value("${coolsms.fromNumber}")
     private String fromNumber;
 
+    @Value("${aws-property.s3-bucket-name}")
+    private String bucketName;
+
+    @Value("${aws-property.s3-substring}")
+    private String s3Substring;
+
     private static final String NICKNAME_PATTERN = "^[a-zA-Z0-9가-힣]{2,8}$";
     private static final String PHONE_NUMBER_PATTERN = "^010\\d{8}$";
 
@@ -174,7 +180,7 @@ public class MemberService {
         member.updateMember(
                 memberJoinRequest.isSubscribed(),
                 memberJoinRequest.nickname(),
-                memberJoinRequest.image(),
+                "https://" + bucketName + s3Substring + "profiles/" + memberJoinRequest.image(),
                 memberJoinRequest.phoneNumber().replaceAll("-", ""),
                 memberJoinRequest.univName(),
                 memberJoinRequest.field(),
