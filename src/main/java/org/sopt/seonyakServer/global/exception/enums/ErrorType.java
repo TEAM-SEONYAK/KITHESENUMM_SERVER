@@ -76,6 +76,8 @@ public enum ErrorType {
     NOT_FOUND_SENIOR_ERROR(HttpStatus.NOT_FOUND, "40405", "존재하지 않는 선배입니다."),
     NOT_FOUND_APPOINTMENT_ERROR(HttpStatus.NOT_FOUND, "40406", "존재하지 않는 약속입니다."),
     NOT_FOUND_GOOGLE_MEET_LINK_ERROR(HttpStatus.NOT_FOUND, "40407", "구글 미트 링크가 존재하지 않는 약속입니다."),
+    NOT_FOUND_UNIV_EMAIL_DOMAIN_ERROR(HttpStatus.NOT_FOUND, "40408", "해당 대학교에 해당하는 메일 도메인이 없습니다."),
+    NOT_FOUND_UNIV_NAME_ERROR(HttpStatus.NOT_FOUND, "40409", "디비에 존재하지 않는 대학명입니다."),
 
     /**
      * 409 CONFLICT
@@ -90,7 +92,8 @@ public enum ErrorType {
     GET_UPLOAD_PRESIGNED_URL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "50002", "업로드를 위한 Presigned URL 획득에 실패했습니다."),
     GET_GOOGLE_MEET_URL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "50003", "구글미트 URL 획득에 실패했습니다."),
     GET_GOOGLE_AUTHORIZER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "50004", "구글 인증유저 획득에 실패했습니다."),
-    INTERNAL_FEIGN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "50005", "FEIGN 에러가 발생했습니다.");
+    INTERNAL_FEIGN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "50005", "FEIGN 에러가 발생했습니다."),
+    SMTP_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "50006", "메일 발송에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
