@@ -106,7 +106,7 @@ public class MemberService {
                         role = "JUNIOR";
                     }
                 } else {
-                    role = "SENIOR";
+                    role = (member.getSenior().getCatchphrase() != null) ? "SENIOR" : "SENIOR_PENDING";
                 }
 
                 return getTokenByMemberId(
@@ -135,7 +135,7 @@ public class MemberService {
                     role = "JUNIOR";
                 }
             } else {
-                role = "SENIOR";
+                role = (member.getSenior().getCatchphrase() != null) ? "SENIOR" : "SENIOR_PENDING";
             }
 
             return getTokenByMemberId(
