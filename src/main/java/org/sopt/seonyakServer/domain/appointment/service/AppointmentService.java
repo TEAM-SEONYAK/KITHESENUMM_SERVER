@@ -166,7 +166,7 @@ public class AppointmentService {
 
         message.setFrom(fromNumber);
         message.setTo(member.getPhoneNumber());
-        message.setText("[선약] '" + messageDetail);
+        message.setText("[선약] " + messageDetail);
 
         this.defaultMessageService.sendOne(new SingleMessageSendingRequest(message));
     }
