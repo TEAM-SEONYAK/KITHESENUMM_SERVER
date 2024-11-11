@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.sopt.seonyakServer.global.common.external.naver.dto.OcrBusinessResponse;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OcrService {
     private final OcrConfig ocrConfig;
 
@@ -206,6 +208,7 @@ public class OcrService {
     private String getOcrResponse(String apiUrl, String apiKey, MultipartFile file) throws IOException {
 
         String response = requestNaverOcr(apiUrl, apiKey, file);
+        log.info("OCR API Response: {}", response);
         // 네이버 OCR 실패 응답 처리
         String responseResult = extractInferResult(response);
         if (responseResult.equals("FAILURE")) {
