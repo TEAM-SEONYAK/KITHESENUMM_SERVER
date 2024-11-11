@@ -177,10 +177,14 @@ public class MemberService {
     public MemberJoinResponse patchMemberJoin(MemberJoinRequest memberJoinRequest) {
         Member member = memberRepository.findMemberByIdOrThrow(principalHandler.getUserIdFromPrincipal());
 
+        String image = memberJoinRequest.image().isEmpty()
+                ? (Math.random() < 0.5 ? "basic1.jpg" : "basic2.jpg")
+                : memberJoinRequest.image();
+
         member.updateMember(
                 memberJoinRequest.isSubscribed(),
                 memberJoinRequest.nickname(),
-                "https://" + bucketName + s3Substring + "profiles/" + memberJoinRequest.image(),
+                "https://" + bucketName + s3Substring + "profiles/" + image,
                 memberJoinRequest.phoneNumber().replaceAll("-", ""),
                 memberJoinRequest.univName(),
                 memberJoinRequest.field(),
