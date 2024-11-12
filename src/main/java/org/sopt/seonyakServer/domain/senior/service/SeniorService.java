@@ -97,7 +97,6 @@ public class SeniorService {
 
     @Transactional(readOnly = true)
     public SeniorCardProfileResponse getSeniorCardProfile(final Long seniorId) {
-        Member member = memberRepository.findMemberByIdOrThrow(principalHandler.getUserIdFromPrincipal());
         Senior senior = seniorRepository.findSeniorByIdOrThrow(seniorId);
 
         return SeniorCardProfileResponse.of(
@@ -107,7 +106,7 @@ public class SeniorService {
                 senior.getPosition(),
                 senior.getDetailPosition(),
                 senior.getLevel(),
-                member.getImage()
+                senior.getMember().getImage()
         );
     }
 }
