@@ -88,7 +88,7 @@ dependencies {
     // Redisson
     implementation "org.redisson:redisson:3.29.0"
 
-    // SWAGER
+    // Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
     // EMAIL
