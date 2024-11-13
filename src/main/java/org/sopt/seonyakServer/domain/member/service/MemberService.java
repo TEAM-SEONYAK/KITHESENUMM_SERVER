@@ -191,19 +191,13 @@ public class MemberService {
                 memberJoinRequest.departmentList()
         );
 
-        Long seniorId = null;
-
-        if ("SENIOR".equals(memberJoinRequest.role())) {
+        if ("SENIOR_PENDING".equals(memberJoinRequest.role())) {
             member.addSenior(seniorService.createSenior(memberJoinRequest, member));
-            seniorId = member.getSenior().getId();
         } else if (!"JUNIOR".equals(memberJoinRequest.role())) {
             throw new CustomException(ErrorType.INVALID_USER_TYPE_ERROR);
         }
 
-        return MemberJoinResponse.of(
-                seniorId,
-                memberJoinRequest.role()
-        );
+        return MemberJoinResponse.of(memberJoinRequest.role());
     }
 
     @Transactional
