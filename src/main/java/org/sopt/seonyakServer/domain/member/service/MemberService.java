@@ -92,9 +92,9 @@ public class MemberService {
 
     // Access Token을 생성할 때, 해당 유저의 회원가입 여부를 판단
     private LoginSuccessResponse getTokenDto(final MemberInfoResponse memberInfoResponse) {
-        try {
-            Member member;
+        Member member;
 
+        try {
             if (isExistingMember(memberInfoResponse.socialType(), memberInfoResponse.socialId())) {
                 member = memberRepository.findBySocialTypeAndSocialIdOrThrow(
                         memberInfoResponse.socialType(),
@@ -109,23 +109,17 @@ public class MemberService {
 
                 member = memberRepository.save(member);
             }
-
-            String role = determineRole(member);
-            String nickname = determineNickname(member);
-
-            return getTokenByMemberId(role, member.getId(), nickname);
-
         } catch (DataIntegrityViolationException e) { // DB 무결성 제약 조건 위반 예외
-            Member member = memberRepository.findBySocialTypeAndSocialIdOrThrow(
+            member = memberRepository.findBySocialTypeAndSocialIdOrThrow(
                     memberInfoResponse.socialType(),
                     memberInfoResponse.socialId()
             );
-
-            String role = determineRole(member);
-            String nickname = determineNickname(member);
-
-            return getTokenByMemberId(role, member.getId(), nickname);
         }
+
+        String role = determineRole(member);
+        String nickname = determineNickname(member);
+
+        return getTokenByMemberId(role, member.getId(), nickname);
     }
 
     private boolean isExistingMember(
@@ -149,7 +143,7 @@ public class MemberService {
         if (member.getSenior() == null) {
             return member.getPhoneNumber() != null ? "JUNIOR" : null;
         } else {
-            return "SENIOR";
+            return member.getSenior().getCatchphrase() != null ? "SENIOR" : "SENIOR_PENDING";
         }
     }
 
