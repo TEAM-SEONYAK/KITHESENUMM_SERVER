@@ -93,55 +93,38 @@ public class MemberService {
     // Access Token을 생성할 때, 해당 유저의 회원가입 여부를 판단
     private LoginSuccessResponse getTokenDto(final MemberInfoResponse memberInfoResponse) {
         try {
+            Member member;
+
             if (isExistingMember(memberInfoResponse.socialType(), memberInfoResponse.socialId())) {
-                Member member = memberRepository.findBySocialTypeAndSocialIdOrThrow(
+                member = memberRepository.findBySocialTypeAndSocialIdOrThrow(
                         memberInfoResponse.socialType(),
                         memberInfoResponse.socialId()
                 );
-
-                String role = null;
-
-                if (member.getSenior() == null) {
-                    if (member.getPhoneNumber() != null) { // 멤버 엔티티에 전화번호가 없으면 온보딩을 완료하지 못한 것으로 간주
-                        role = "JUNIOR";
-                    }
-                } else {
-                    role = (member.getSenior().getCatchphrase() != null) ? "SENIOR" : "SENIOR_PENDING";
-                }
-
-                return getTokenByMemberId(
-                        role,
-                        member.getId()
-                );
             } else {
-                Member member = Member.builder()
+                member = Member.builder()
                         .socialType(memberInfoResponse.socialType())
                         .socialId(memberInfoResponse.socialId())
                         .email(memberInfoResponse.email())
                         .build();
 
-                return getTokenByMemberId(null, memberRepository.save(member).getId());
+                member = memberRepository.save(member);
             }
+
+            String role = determineRole(member);
+            String nickname = determineNickname(member);
+
+            return getTokenByMemberId(role, member.getId(), nickname);
+
         } catch (DataIntegrityViolationException e) { // DB 무결성 제약 조건 위반 예외
             Member member = memberRepository.findBySocialTypeAndSocialIdOrThrow(
                     memberInfoResponse.socialType(),
                     memberInfoResponse.socialId()
             );
 
-            String role = null;
+            String role = determineRole(member);
+            String nickname = determineNickname(member);
 
-            if (member.getSenior() == null) {
-                if (member.getPhoneNumber() != null) { // 멤버 엔티티에 전화번호가 없으면 온보딩을 완료하지 못한 것으로 간주
-                    role = "JUNIOR";
-                }
-            } else {
-                role = (member.getSenior().getCatchphrase() != null) ? "SENIOR" : "SENIOR_PENDING";
-            }
-
-            return getTokenByMemberId(
-                    role,
-                    member.getId()
-            );
+            return getTokenByMemberId(role, member.getId(), nickname);
         }
     }
 
@@ -154,11 +137,27 @@ public class MemberService {
 
     public LoginSuccessResponse getTokenByMemberId(
             final String role,
-            final Long id
+            final Long id,
+            final String nickname
     ) {
         MemberAuthentication memberAuthentication = new MemberAuthentication(id, null, null);
 
-        return LoginSuccessResponse.of(role, jwtTokenProvider.issueAccessToken(memberAuthentication));
+        return LoginSuccessResponse.of(role, jwtTokenProvider.issueAccessToken(memberAuthentication), nickname);
+    }
+
+    private String determineRole(Member member) {
+        if (member.getSenior() == null) {
+            return member.getPhoneNumber() != null ? "JUNIOR" : null;
+        } else {
+            return "SENIOR";
+        }
+    }
+
+    private String determineNickname(Member member) {
+        if (member.getSenior() != null && member.getSenior().getCatchphrase() == null) {
+            return member.getNickname();
+        }
+        return null;
     }
 
     // 닉네임 유효성 검증
@@ -191,19 +190,13 @@ public class MemberService {
                 memberJoinRequest.departmentList()
         );
 
-        Long seniorId = null;
-
-        if ("SENIOR".equals(memberJoinRequest.role())) {
+        if ("SENIOR_PENDING".equals(memberJoinRequest.role())) {
             member.addSenior(seniorService.createSenior(memberJoinRequest, member));
-            seniorId = member.getSenior().getId();
         } else if (!"JUNIOR".equals(memberJoinRequest.role())) {
             throw new CustomException(ErrorType.INVALID_USER_TYPE_ERROR);
         }
 
-        return MemberJoinResponse.of(
-                seniorId,
-                memberJoinRequest.role()
-        );
+        return MemberJoinResponse.of(memberJoinRequest.role());
     }
 
     @Transactional
