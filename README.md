@@ -28,9 +28,31 @@
 </table>
 </div>
 
-`김창균` - EC2, RDS 세팅 / 컨벤션들 작성 / 구글 소셜 로그인 연동 / API 개발
+`김창균` - EC2, RDS 세팅 / 컨벤션, 엔티티 작성 / 구글 소셜 로그인 연동 / 문자 발송을 위한 외부 API 연동 / API 개발
 
 `홍석범` - 응답, 에러 처리를 포함한 프로젝트 초기 세팅 / DOCKER CI, CD 세팅 / 네이버 OCR, 구글 미트 회의실 개설 등 외부 API 연동 / API 개발
+
+<br/>
+
+## Tech Stack ✨
+
+| **Category**       | **Details**                                   |
+|--------------------|-----------------------------------------------|
+| **IDE**            | IntelliJ                                      |
+| **Language**       | Java 17                                       |
+| **Framework**      | Spring Boot 3.3.1, Gradle                     |
+| **Authentication** | Spring Security, JSON Web Tokens              |
+| **ORM**            | Spring Data JPA, QueryDSL                     |
+| **Database**       | PostgreSQL                                    |
+| **In-Memory**      | Redis (Cache)                                 |
+| **Infra**          | AWS EC2, AWS RDS, AWS Route 53, Nginx, Docker |
+| **CI/CD**          | GitHub Actions                                |
+| **Storage**        | Amazon S3                                     |
+| **Scheduling**     | Spring Scheduler                              |
+| **Email**          | Spring Boot Mail                              |
+| **External API**   | CoolSMS SDK, OpenFeign, Google Cloud Meet SDK |
+| **API Docs**       | Notion, Swagger                               |
+| **Other Tools**    | DataGrip, Discord, Figma, Postman             |
 
 <br/>
 
