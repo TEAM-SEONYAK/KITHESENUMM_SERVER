@@ -2,7 +2,6 @@ package org.sopt.seonyakServer.global.auth.filter;
 
 import static org.sopt.seonyakServer.global.auth.jwt.JwtValidationType.VALID_JWT;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,11 +49,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // 따라서 예외를 직접 throw로 던져주는 것이 아닌, 발생시키기만 하고 다음 필터 호출로 이어지게끔 해야 하고, (doFilter)
             // 이렇게 하면 API의 permitAll 적용 여부에 따라 ExceptionTranslationFilter를 거칠지 판단하게 된다.
             log.error("JwtAuthentication Authentication Exception Occurs! - {}", exception.getMessage());
-
-            if (exception instanceof ExpiredJwtException) {
-                throw new CustomException(ErrorType.EXPIRED_JWT_TOKEN);
-            }
         }
+
         // 다음 필터로 요청 전달 (호출)
         filterChain.doFilter(request, response);
     }
