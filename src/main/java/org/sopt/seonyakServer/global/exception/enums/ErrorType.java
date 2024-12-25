@@ -77,7 +77,7 @@ public enum ErrorType {
     NOT_FOUND_APPOINTMENT_ERROR(HttpStatus.NOT_FOUND, "40406", "존재하지 않는 약속입니다."),
     NOT_FOUND_GOOGLE_MEET_LINK_ERROR(HttpStatus.NOT_FOUND, "40407", "구글 미트 링크가 존재하지 않는 약속입니다."),
     NOT_FOUND_UNIV_EMAIL_DOMAIN_ERROR(HttpStatus.NOT_FOUND, "40408", "해당 대학교에 해당하는 메일 도메인이 없습니다."),
-    NOT_FOUND_UNIV_NAME_ERROR(HttpStatus.NOT_FOUND, "40409", "디비에 존재하지 않는 대학명입니다."),
+    NOT_FOUND_UNIV_NAME_ERROR(HttpStatus.NOT_FOUND, "40409", "DB에 존재하지 않는 대학명입니다."),
 
     /**
      * 409 CONFLICT
