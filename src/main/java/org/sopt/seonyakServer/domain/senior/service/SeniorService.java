@@ -8,7 +8,6 @@ import org.sopt.seonyakServer.domain.member.model.Member;
 import org.sopt.seonyakServer.domain.member.repository.MemberRepository;
 import org.sopt.seonyakServer.domain.senior.dto.SeniorCardProfileResponse;
 import org.sopt.seonyakServer.domain.senior.dto.SeniorFilterResponse;
-import org.sopt.seonyakServer.domain.senior.dto.SeniorNameResponse;
 import org.sopt.seonyakServer.domain.senior.dto.SeniorProfileRequest;
 import org.sopt.seonyakServer.domain.senior.dto.SeniorProfileResponse;
 import org.sopt.seonyakServer.domain.senior.model.PreferredTimeList;
@@ -109,13 +108,5 @@ public class SeniorService {
                 senior.getLevel(),
                 senior.getMember().getImage()
         );
-    }
-
-    @Transactional(readOnly = true)
-    public SeniorNameResponse validTokenExpired() {
-        Senior senior = seniorRepository.findSeniorByMemberId(principalHandler.getUserIdFromPrincipal())
-                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_SENIOR_BY_MEMBER));
-
-        return SeniorNameResponse.of(senior.getMember().getNickname());
     }
 }

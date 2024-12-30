@@ -7,10 +7,12 @@ import org.sopt.seonyakServer.domain.member.dto.MemberJoinRequest;
 import org.sopt.seonyakServer.domain.member.dto.MemberJoinResponse;
 import org.sopt.seonyakServer.domain.member.dto.NicknameRequest;
 import org.sopt.seonyakServer.domain.member.dto.SendCodeRequest;
+import org.sopt.seonyakServer.domain.member.dto.ValidTokenResponse;
 import org.sopt.seonyakServer.domain.member.dto.VerifyCodeRequest;
 import org.sopt.seonyakServer.domain.member.service.MemberService;
 import org.sopt.seonyakServer.global.common.external.client.dto.MemberLoginRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,5 +67,10 @@ public class MemberController {
         memberService.verifyCode(verifyCodeRequest);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/auth/token/validate")
+    public ResponseEntity<ValidTokenResponse> validTokenExpired() {
+        return ResponseEntity.ok(memberService.validTokenExpired());
     }
 }

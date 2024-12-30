@@ -250,4 +250,18 @@ public class MemberService {
         LocalDateTime oneHourAgo = LocalDateTime.now().minusMinutes(60);
         memberRepository.deleteByPhoneNumberIsNullAndUpdatedAtBefore(oneHourAgo);
     }
+
+    @Transactional(readOnly = true)
+    public ValidTokenResponse validTokenExpired() {
+        Member member = memberRepository.findMemberByIdOrThrow(principalHandler.getUserIdFromPrincipal());
+        Boolean isPending;
+
+        if (member.getSenior() == null) {
+            isPending = null;
+        } else {
+            isPending = member.getSenior().getCatchphrase() == null;
+        }
+
+        return ValidTokenResponse.of(member.getNickname(), isPending);
+    }
 }
