@@ -4,7 +4,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.sopt.seonyakServer.domain.senior.dto.SeniorCardProfileResponse;
 import org.sopt.seonyakServer.domain.senior.dto.SeniorFilterResponse;
-import org.sopt.seonyakServer.domain.senior.dto.SeniorNameResponse;
 import org.sopt.seonyakServer.domain.senior.dto.SeniorProfileRequest;
 import org.sopt.seonyakServer.domain.senior.dto.SeniorProfileResponse;
 import org.sopt.seonyakServer.domain.senior.model.PreferredTimeList;
@@ -20,12 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/senior")
 public class SeniorController {
 
     private final SeniorService seniorService;
 
-    @PatchMapping("/senior/profile")
+    @PatchMapping("/profile")
     public ResponseEntity<Void> patchProfile(
             @RequestBody SeniorProfileRequest seniorProfileRequest
     ) {
@@ -33,14 +32,14 @@ public class SeniorController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/senior/time/{seniorId}")
+    @GetMapping("/time/{seniorId}")
     public ResponseEntity<PreferredTimeList> getPreferredTime(
             @PathVariable final Long seniorId
     ) {
         return ResponseEntity.ok(seniorService.getSeniorPreferredTime(seniorId));
     }
 
-    @GetMapping("/senior/search")
+    @GetMapping("/search")
     public ResponseEntity<SeniorFilterResponse> searchFieldPosition(
             @RequestParam(required = false) final List<String> field,
             @RequestParam(required = false) final List<String> position
@@ -48,22 +47,17 @@ public class SeniorController {
         return ResponseEntity.ok(seniorService.searchSeniorFieldPosition(field, position));
     }
 
-    @GetMapping("/senior/{seniorId}")
+    @GetMapping("/{seniorId}")
     public ResponseEntity<SeniorProfileResponse> getSeniorProfile(
             @PathVariable final Long seniorId
     ) {
         return ResponseEntity.ok(seniorService.getSeniorProfile(seniorId));
     }
 
-    @GetMapping("/senior/card/{seniorId}")
+    @GetMapping("/card/{seniorId}")
     public ResponseEntity<SeniorCardProfileResponse> getSeniorCardProfile(
             @PathVariable final Long seniorId
     ) {
         return ResponseEntity.ok(seniorService.getSeniorCardProfile(seniorId));
-    }
-
-    @GetMapping("/auth/token/validate")
-    public ResponseEntity<SeniorNameResponse> validTokenExpired() {
-        return ResponseEntity.ok(seniorService.validTokenExpired());
     }
 }
