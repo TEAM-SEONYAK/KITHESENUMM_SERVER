@@ -5,18 +5,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record LoginSuccessResponse(
         String role,
-        String accessToken,
-        String nickname
+        String accessToken
 ) {
+
     public static LoginSuccessResponse of(
             final String role,
-            final String accessToken,
-            final String nickname
+            final String accessToken
     ) {
         return new LoginSuccessResponse(
                 role,
-                accessToken,
-                nickname
+                accessToken
         );
     }
 }

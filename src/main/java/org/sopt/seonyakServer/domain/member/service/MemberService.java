@@ -13,6 +13,7 @@ import org.sopt.seonyakServer.domain.member.dto.MemberJoinRequest;
 import org.sopt.seonyakServer.domain.member.dto.MemberJoinResponse;
 import org.sopt.seonyakServer.domain.member.dto.NicknameRequest;
 import org.sopt.seonyakServer.domain.member.dto.SendCodeRequest;
+import org.sopt.seonyakServer.domain.member.dto.ValidTokenResponse;
 import org.sopt.seonyakServer.domain.member.dto.VerifyCodeRequest;
 import org.sopt.seonyakServer.domain.member.model.Member;
 import org.sopt.seonyakServer.domain.member.model.SocialType;
@@ -117,9 +118,8 @@ public class MemberService {
         }
 
         String role = determineRole(member);
-        String nickname = determineNickname(member);
 
-        return getTokenByMemberId(role, member.getId(), nickname);
+        return getTokenByMemberId(role, member.getId());
     }
 
     private boolean isExistingMember(
@@ -131,27 +131,19 @@ public class MemberService {
 
     public LoginSuccessResponse getTokenByMemberId(
             final String role,
-            final Long id,
-            final String nickname
+            final Long id
     ) {
         MemberAuthentication memberAuthentication = new MemberAuthentication(id, null, null);
 
-        return LoginSuccessResponse.of(role, jwtTokenProvider.issueAccessToken(memberAuthentication), nickname);
+        return LoginSuccessResponse.of(role, jwtTokenProvider.issueAccessToken(memberAuthentication));
     }
 
     private String determineRole(Member member) {
         if (member.getSenior() == null) {
             return member.getPhoneNumber() != null ? "JUNIOR" : null;
         } else {
-            return member.getSenior().getCatchphrase() != null ? "SENIOR" : "SENIOR_PENDING";
+            return "SENIOR";
         }
-    }
-
-    private String determineNickname(Member member) {
-        if (member.getSenior() != null && member.getSenior().getCatchphrase() == null) {
-            return member.getNickname();
-        }
-        return null;
     }
 
     // 닉네임 유효성 검증
@@ -184,7 +176,7 @@ public class MemberService {
                 memberJoinRequest.departmentList()
         );
 
-        if ("SENIOR_PENDING".equals(memberJoinRequest.role())) {
+        if ("SENIOR".equals(memberJoinRequest.role()) && member.getSenior() == null) {
             member.addSenior(seniorService.createSenior(memberJoinRequest, member));
         } else if (!"JUNIOR".equals(memberJoinRequest.role())) {
             throw new CustomException(ErrorType.INVALID_USER_TYPE_ERROR);
